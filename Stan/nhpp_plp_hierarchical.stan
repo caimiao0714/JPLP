@@ -1,3 +1,4 @@
+// Stan code to estimate a hierchical PLP process
 functions{
   real nhpp_log(vector t, real beta, real theta, real tau){
     vector[num_elements(t)] loglik_part;
@@ -8,21 +9,21 @@ functions{
     loglikelihood = sum(loglik_part) - (tau/theta)^beta;
     return loglikelihood;
   }
-  real nhppnoevent_log(real tau, real beta, real theta){
+  real nhppnoevent_lp(real tau, real beta, real theta){
     real loglikelihood = - (tau/theta)^beta;
     return(loglikelihood);
   }
 }
 data {
-  int<lower=1> N; //total # of failures
-  int<lower=1> K; //number of predictors
-  int<lower=1> S; //total # of shifts
-  int<lower=1> D; //total # of drivers
-  int<lower=1> id[S];//driver index, must be an array
-  vector<lower=0>[S] tau;//truncated time
-  vector<lower=0>[N] event_time; //failure time
-  int group_size[S]; //group sizes
-  matrix[S, K] X_predictors;//predictor variable matrix
+  int<lower=1> N;                // total # of failures
+  int<lower=1> K;                // number of predictors
+  int<lower=1> S;                // total # of shifts
+  int<lower=1> D;                // total # of drivers
+  int<lower=1> id[S];            // driver index, must be an array
+  vector<lower=0>[S] tau;        // truncated time
+  vector<lower=0>[N] event_time; // failure time
+  int group_size[S];             // group sizes
+  matrix[S, K] X_predictors;     // predictor variable matrix
 }
 transformed data{
   matrix[S, K] X_centered;
@@ -33,14 +34,11 @@ transformed data{
   }
 }
 parameters{
-  real mu0; // hyperparameter
-  real<lower=0> sigma0;// hyperparameter
-  real<lower=0> beta;
-  vector[K] R1_K; // fixed parameters
-  vector[D] R0; // random intercept
-}
-transformed parameters{
-  //vector[S] r_1_1 = ()
+  real mu0;             // hyperparameter: mean
+  real<lower=0> sigma0; // hyperparameter: s.e.
+  real<lower=0> beta;   // shape parameter
+  vector[K] R1_K;       // fixed parameters each of K predictors
+  vector[D] R0;         // random intercept for each of D drivers
 }
 model{
   int position = 1;
@@ -52,7 +50,7 @@ model{
 
   for (s1 in 1:S){
     if(group_size[s1] == 0) {
-      tau[s1] ~ nhppnoevent(beta, theta_temp[s1]);
+      target += nhppnoevent_lp(tau[s1], beta, theta_temp[s1]);
     }else{
       segment(event_time, position, group_size[s1]) ~ nhpp(beta, theta_temp[s1], tau[s1]);
       position += group_size[s1];
@@ -63,7 +61,6 @@ model{
   R1_K  ~ normal(0, 10);
   mu0 ~ normal(0, 10);
   sigma0 ~ gamma(1, 1);
-  //theta_temp ~ gamma(1, 0.01);
 }
 generated quantities{
   real mu0_true = mu0 - dot_product(X_means, R1_K);
