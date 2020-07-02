@@ -87,5 +87,4 @@ model{
 generated quantities{
   real mu0_true = mu0 - dot_product(X_means, R1_K);
   vector[D] R0_true = R0 - dot_product(X_means, R1_K);
-  //real theta_correct = theta_temp - dot_product(X_centered, R1_K);
 }
