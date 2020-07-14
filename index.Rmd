@@ -340,6 +340,8 @@ t_JPLP
 Supplementary trace plots for selected parameters in the manuscript
 ----
 
+Trace plots below are generated from the 496 large commercial truck drivers, which is demonstrated as a case study in the main manuscript.
+
 ```{r}
 knitr::include_graphics("Figures/Aim3_trace_plot.jpeg")
 ```
