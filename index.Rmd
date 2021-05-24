@@ -1,20 +1,19 @@
 ---
-title: |
-  | Supplementary Materials
-  | Hierarchical Point Process Models for Recurring Safety Critical Events Involving Commercial Truck Drivers:
-  | A Reliability Framework for Human Performance Modeling
-date: July 15, 2020
-output: 
-  pdf_document:
-    toc: true
-    number_sections: true
+title: 'Supplementary Materials'
+subtitle: 'Hierarchical Point Process Models for Recurring Safety Critical Events Involving Commercial Truck Drivers: A Reliability Framework for Human Performance Modeling'
+date: "May 23, 2021"
+output:
   distill::distill_article:
-    toc: true
-    toc_float: true
-    number_sections: true
+    toc: yes
+    toc_float: yes
+    number_sections: yes
+  pdf_document:
+    toc: yes
+    number_sections: yes
 ---
 
 <style type="text/css">
+
 h1 {
     display: block;
     font-size: 20px;
@@ -24,6 +23,9 @@ h1 {
     margin-inline-end: 0px;
     font-weight: bold;
 }
+h1.title {
+  font-size: 20px;
+}
 d-article h2 {
     font-weight: 600;
     font-size: 16px;
@@ -32,6 +34,10 @@ d-article h2 {
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     padding-bottom: 1rem;
 }
+
+d-article h1.title {
+    font-size: 16px;
+}
 </style>
 
 
@@ -39,12 +45,12 @@ d-article h2 {
 knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
 ```
 
-This website serves as the supplementary materials for the manuscript titled "**Hierarchical Point Process Models for Recurring Safety Critical Events for Commercial Truck Drivers**", which is under review at [Journal of the American Statistical Association](https://amstat.tandfonline.com/toc/uasa20/current).
+This website serves as the supplementary materials for the paper titled "**Hierarchical Point Process Models for Recurring Safety Critical Events Involving Commercial Truck Drivers: A Reliability Framework for Human Performance Modeling**", published on [Journal of Quality Technology](https://asq.org/quality-resources/pub/journal-of-quality-technology).
 
 Two models are proposed in this paper: 
 
-1. A non-homogeneous Poisson process (NHPP) with the power law process (PLP) intensity function,
-2. A jump power law process (JPLP)
+1. A Bayesian hierarchical non-homogeneous Poisson process (NHPP) with the power law process (PLP) intensity function,
+2. A Bayesian hierarchical jump power law process (JPLP)
 
 The first section shows the R code to simulate data following the NHPP and JPLP data generating process. Only 10 drivers are assumed to minimize the simulation and Bayesian estimation time. Then, Stan code to perform Bayesian hierarchical PLP and JPLP estimation is presented in the next section. In the third section, R code for performing Hamiltonian Monte Carlo for the simulated data are demonstrated. In the last section, we present the R code to get summary statistics (posterior mean, 95% credible interval, Gelman-Rubin statistics $\hat{R}$, and effective sample size ESS) from the posterior distribution are shown.
 
@@ -313,7 +319,7 @@ NHPP with PLP intensity function
 ### Posterior mean, 95% credible interval, ESS, and $\hat{R}$
 
 ```{r}
-est_NHPP = broom::tidy(fit_NHPP, conf.int = T, rhat = T, ess = T)
+est_NHPP = broom.mixed::tidy(fit_NHPP, conf.int = T, rhat = T, ess = T)
 est_NHPP
 ```
 
@@ -329,7 +335,7 @@ JPLP
 ### Posterior mean, 95% credible interval, ESS, and $\hat{R}$
 
 ```{r}
-est_JPLP = broom::tidy(fit_JPLP, conf.int = T, rhat = T, ess = T)
+est_JPLP = broom.mixed::tidy(fit_JPLP, conf.int = T, rhat = T, ess = T)
 est_JPLP
 ```
 
