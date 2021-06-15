@@ -1,5 +1,5 @@
 ---
-title: 'Supplementary Materials'
+title: 'Supplemental Materials'
 subtitle: 'Hierarchical Point Process Models for Recurring Safety Critical Events Involving Commercial Truck Drivers: A Reliability Framework for Human Performance Modeling'
 date: "May 23, 2021"
 output:
@@ -45,7 +45,7 @@ d-article h1.title {
 knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
 ```
 
-This website serves as the supplementary materials for the paper titled "**Hierarchical Point Process Models for Recurring Safety Critical Events Involving Commercial Truck Drivers: A Reliability Framework for Human Performance Modeling**", published on [Journal of Quality Technology](https://asq.org/quality-resources/pub/journal-of-quality-technology).
+This website serves as the supplemental materials for the paper titled "**Hierarchical Point Process Models for Recurring Safety Critical Events Involving Commercial Truck Drivers: A Reliability Framework for Human Performance Modeling**", published on [Journal of Quality Technology](https://asq.org/quality-resources/pub/journal-of-quality-technology).
 
 Two models are proposed in this paper: 
 
@@ -63,6 +63,7 @@ Simulate NHPP data with PLP intensity function
 pacman::p_load(dplyr, rstan, broom)
 source('Functions/NHPP_functions.R')
 set.seed(123)
+
 df_NHPP = sim_hier_nhpp(D = 10, beta = 1.2)
 str(df_NHPP$hier_dat)
 ```
@@ -109,12 +110,10 @@ Stan code
 ===========
 The Stan codes for both models are written using self-define likelihood functions. These likelihood functions have been derived in the manuscript.
 
-NHPP with PLP intensity function
---------------------------------
+Stan code to estimate a hierarchical PLP
+----------------------------------------
 
-```{r}
-stan_NHPP = 
-'// Stan code to estimate a hierchical PLP process
+```
 functions{
   real nhpp_log(vector t, real beta, real theta, real tau){
     vector[num_elements(t)] loglik_part;
@@ -183,17 +182,13 @@ generated quantities{
   vector[D] R0_true = R0 - dot_product(X_means, R1_K);
   //real theta_correct = theta_temp - dot_product(X_centered, R1_K);
 }
-
-'
 ```
 
 
-JPLP
-----
+Stan code to estimate a hierarchical JPLP
+----------------------------------------
 
-```{r}
-stan_JPLP = 
-'
+```
 functions{
   // LogLikelihood function for shifts with events (N_{event} > 0)
   real jplp_log(vector t_event, // time of SCEs
@@ -283,7 +278,6 @@ generated quantities{
   vector[D] R0_true = R0 - dot_product(X_means, R1_K);
   //real theta_correct = theta_temp - dot_product(X_centered, R1_K);
 }
-'
 ```
 
 
